@@ -7,7 +7,7 @@ export default defineConfig({
   lang: 'en-US',
   lastUpdated: true,
   cleanUrls: true,
-  base: '/javaprofilingvisualizer/',
+  base: '/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#e8590c' }]
