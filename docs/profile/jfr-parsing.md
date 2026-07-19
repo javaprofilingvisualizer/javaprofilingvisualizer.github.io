@@ -21,6 +21,28 @@ type depends on the sampling mode and on where the sample landed:
 Accepting the whole family keeps the pipeline correct whatever capture mode
 the profiling script selects (`-e cpu`, `-e wall`, `-e itimer`, `--jfrsync`, …).
 
+## Frame filtering and normalization
+
+Before a frame contributes to either construction below, it goes through a
+few passes that keep both graphs readable and comparable:
+
+- **JDK/system frames are excluded** — `java.lang`, `javax.`, `jdk`, `sun.`,
+  `com.sun.`, `org.xml.`, `org.w3c.` packages, and native-library frames
+  (`lib*.so`, unresolved `jvm` frames), are dropped: none of these are
+  decisions the profiled application controls.
+- **Inner and anonymous classes collapse into their enclosing class** —
+  `Outer$Inner` is attributed to `Outer`, since JDK-generated inner classes
+  multiply quickly without adding value at this granularity.
+- **Consecutive duplicate frames are merged**, so a chain of same-class calls
+  (e.g. recursive helpers) does not inflate the branch with repeated nodes.
+
+The treemap goes one level further, since it descends to individual
+**methods**: `lambda$…` / `$anonfun$…` method names are normalized back to
+the method that declares the lambda, and compiler-generated `access$…`
+accessor frames are filtered out entirely — otherwise a single lambda body
+would fragment into several visually distinct leaves. The Sankey stops at
+class granularity, so this last step does not apply to it.
+
 ## Two constructions from the same samples
 
 ### Hierarchical cost tree (treemap)

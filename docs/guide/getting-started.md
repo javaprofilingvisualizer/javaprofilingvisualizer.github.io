@@ -53,6 +53,26 @@ cd profile
 make run FILE=profile.jfr
 ```
 
+### Restricting to a time window
+
+`FROM` and `TO` are seconds relative to the first execution sample, and only apply to `.jfr` recordings — collapsed CSV traces don't support them:
+
+```bash
+make run FILE=profile.jfr FROM=5 TO=12
+```
+
+`make log` prints (and writes to `<file>-phases.log`) the leaf class running at each point in time, merging consecutive samples that share the same leaf, so you can read off the exact bounds to pass to `FROM` / `TO`:
+
+```bash
+make log FILE=profile.jfr
+```
+
+`TIME`, in seconds, overrides the duration used to normalize the treemap — but only takes effect when neither `FROM` nor `TO` is set; pass all three together and `TIME` is silently ignored:
+
+```bash
+make run FILE=profile.jfr TIME=30
+```
+
 ### Across versions — Differential module
 
 From the JSON files produced by the Profile module, you can produce the streamgraph by running:

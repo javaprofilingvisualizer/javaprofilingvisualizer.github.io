@@ -28,5 +28,5 @@ Three aggregation levels: **package**, **class** and **method**.
 
 - **Focus mode** — click a band to isolate it and see the evolution in consumption of that particular node;
 - **Tooltips** — they show the full name history (so renames stay visible), the raw samples and the τ value;
-- **Labels** — positioned at the **top** of each band;
+- **Labels** — positioned at each band's **thickest point**;
 - **Filter panel** — controls the granularity and groups small bands.
